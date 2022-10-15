@@ -1,2 +1,5 @@
-# data-structure
-practice of data structure
+# 数据结构
+参考书目：
+
+[1]《数据结构（C语言版）》严蔚敏，吴伟民 著
+
