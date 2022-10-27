@@ -1,6 +1,7 @@
 /*
-3-1 顺序栈
+3-2-2 栈的应用-行编辑程序
 */
+
 #include<cstdlib>
 #include<cstdio>
 #include<iostream>
@@ -16,7 +17,7 @@ using namespace std;
 #define STACK_INIT_SIZE 10          //存储空间初始分配量
 #define STACK_INCREMENT 2           //存储空间分配增量
 
-typedef int SElemType;
+typedef char SElemType;         //SElemType为char类型
 typedef int Status;
 struct SqStack
 {
@@ -24,6 +25,7 @@ struct SqStack
     SElemType *top;
     int stacksize;
 };
+FILE *fp;//文件指针
 //构造一个空栈
 void InitStack(SqStack &S)
 {
@@ -89,9 +91,9 @@ Status Pop(SqStack &S,SElemType &e)
     e=*--S.top;//将栈顶元素赋给e,栈顶指针下移一格存储单元
     return OK;
 }
-void vi(SElemType e)
+void copy(SElemType c)
 {
-    cout<<e<<" ";
+    fputc(c,fp);//将字符c送至fp所指的文件中
 }
 //从栈底到栈顶依次对栈S中每个元素调用函数visit()
 void StackTraverse(SqStack S,void(*visit)(SElemType))
@@ -102,31 +104,55 @@ void StackTraverse(SqStack S,void(*visit)(SElemType))
     }
     cout<<endl;//栈顶指针上移一个存储单元
 }
-//测试程序
-void test()
+//利用字符栈s，从终端接收一行并送到调用过程的数据区
+void LineEdit()
 {
-    int j;
     SqStack s;
-    SElemType e;
-    InitStack(s);
-    for(j=1;j<=12;j++)
-        Push(s,j);
-    cout<<"栈中元素依次为";
-    StackTraverse(s,vi);
-    Pop(s,e);
-    cout<<"弹出的栈顶元素 e="<<e<<endl;
-    cout<<"栈是否为空?"<<StackEmpty(s)<<"(1:空,0:否)"<<endl;
-    GetTop(s,e);
-    cout<<"栈顶元素e="<<e<<",栈的长度为"<<StackLength(s)<<endl;
-    ClaerStack(s);
-    cout<<"清空栈后,栈空否?"<<StackEmpty(s)<<"(1:空,0:否)"<<endl;
-    DestroyStack(s);
-    cout<<"销毁栈后,s.top="<<s.top<<"s.base="<<s.base<<"s.stacksize="<<s.stacksize<<endl;
+    char ch;
+    InitStack(s);//初始化栈s
+    printf("请输入一个文本文件，^Z结束输入（Windows下Ctrl+z）：\n");
+    printf("（#:删除上一个字符,@:删除这一行@之前的所有字符）\n");
+    ch=getchar();//接收字符到ch
+    while(ch!=EOF)//当全文未结束
+    {
+        while(ch!=EOF && ch!='\n')//当全文未结束且未到行末
+        {
+            switch (ch)//对当前字符ch，分情况处理
+            {
+            case '#':
+                if(!StackEmpty(s))//仅当栈非空时弹出栈顶元素
+                    Pop(s,ch);
+                break;
+            case '@':
+                ClaerStack(s);//重置s为空栈
+                break;
+            default:
+                Push(s,ch);//其他字符进栈
+            }
+            ch=getchar();//从终端接收下一个字符
+        }
+        StackTraverse(s,copy);//将从栈底到栈顶的栈内字符依次传送至文件
+        fputc('\n',fp);//向文件输入一个换行符
+        ClaerStack(s);//重置s为空栈
+        if(ch!=EOF)//全文未结束
+            ch=getchar();//从终端接收下一个字符到ch
+    }
+    DestroyStack(s);//销毁栈s
 }
+
 int main()
 {
-    
-    test();
+    //在当前目录建立ed.txt文件，用于写数据，如已有同名文件则先删除原文件
+    fp=fopen("3_02_02.txt","w");
+    if(fp)//建立文件成功
+    {
+        LineEdit();//行遍历
+        fclose(fp);//关闭fp所指的文件
+    }
+    else
+    {
+        printf("建立文件失败！\n");
+    }
     system("pause");
     return 0;
 }

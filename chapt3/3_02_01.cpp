@@ -1,6 +1,7 @@
 /*
-3-1 顺序栈
+3-2-1 栈的应用-数制转换
 */
+
 #include<cstdlib>
 #include<cstdio>
 #include<iostream>
@@ -12,6 +13,7 @@ using namespace std;
 #define ERROR           0
 #define INFEASIBLE      -1
 #define OVERFLOW        -2
+#define N               8           //要将十进制数转换为N进制数
 
 #define STACK_INIT_SIZE 10          //存储空间初始分配量
 #define STACK_INCREMENT 2           //存储空间分配增量
@@ -103,30 +105,29 @@ void StackTraverse(SqStack S,void(*visit)(SElemType))
     cout<<endl;//栈顶指针上移一个存储单元
 }
 //测试程序
-void test()
+void conversion()
 {
-    int j;
     SqStack s;
+    unsigned n;
     SElemType e;
     InitStack(s);
-    for(j=1;j<=12;j++)
-        Push(s,j);
-    cout<<"栈中元素依次为";
-    StackTraverse(s,vi);
-    Pop(s,e);
-    cout<<"弹出的栈顶元素 e="<<e<<endl;
-    cout<<"栈是否为空?"<<StackEmpty(s)<<"(1:空,0:否)"<<endl;
-    GetTop(s,e);
-    cout<<"栈顶元素e="<<e<<",栈的长度为"<<StackLength(s)<<endl;
-    ClaerStack(s);
-    cout<<"清空栈后,栈空否?"<<StackEmpty(s)<<"(1:空,0:否)"<<endl;
-    DestroyStack(s);
-    cout<<"销毁栈后,s.top="<<s.top<<"s.base="<<s.base<<"s.stacksize="<<s.stacksize<<endl;
+    printf("将十进制整数n转换为%d进制数，请输入：n（≥0）=",N);
+    scanf("%u",&n);//要转换的数字
+    while(n)//当n不为0
+    {
+        Push(s,n%N);//n除以N的余数
+        n=n/N;//n除以N的商
+    }
+    while(!StackEmpty(s))//当栈不为空
+    {
+        Pop(s,e);//将栈顶元素弹出，用e接收返回值
+        printf("%d",e);
+    }
+    printf("\n");
 }
 int main()
 {
-    
-    test();
+    conversion();
     system("pause");
     return 0;
 }
