@@ -3,6 +3,11 @@
         "iostream": "cpp",
         "ostream": "cpp",
         "utility": "cpp",
-        "cstdlib": "cpp"
-    }
+        "cstdlib": "cpp",
+        "cstdio": "cpp",
+        "cstring": "cpp",
+        "cstdarg": "cpp",
+        "cmath": "cpp"
+    },
+    "code-runner.runInTerminal": true
 }
