@@ -12,7 +12,7 @@
 #define ERROR 0
 #define INFEASIBLE -1
 #define OVERFLOW -2
-#define MAX_QSIZE 8 //最大队列长度+1,有一个不用
+#define MAX_QSIZE 7 //最大队列数组长度（有一个不用）
 
 typedef int QElemType;
 typedef int Status;

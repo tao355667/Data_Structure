@@ -23,14 +23,14 @@ typedef int ElemType;
 typedef int Status;
 
 //线性表结构体
-struct Sqlist
+struct SqList
 {
     ElemType *elem; //存储空间基址
     int length;     //当前长度
     int listsize;   //当前分配的存储容量（sizeof(ElemType)为1单位）
 };
 //线性表初始化,构造一个空的线性表
-Status InitList(Sqlist &L)
+Status InitList(SqList &L)
 { //空表：有个基址，表长为0
     //为线性表分配一片空间
     L.elem = (ElemType *)malloc(LIST_INIT_SIZE * sizeof(ElemType));
@@ -41,7 +41,7 @@ Status InitList(Sqlist &L)
     return OK;
 }
 //销毁线性表L
-Status DestroyList(Sqlist &L)
+Status DestroyList(SqList &L)
 {
     free(L.elem);   //释放空间
     L.elem = NULL;  //基址设0
@@ -50,13 +50,13 @@ Status DestroyList(Sqlist &L)
     return OK;
 }
 //将表L置为空表
-Status ClearList(Sqlist &L)
+Status ClearList(SqList &L)
 { //并没有改变内存中的数据，很多操作如遍历表是基于表长的，表长为0则那些操作无法进行，相当于表被置空
     L.length = 0;
     return OK;
 }
 // L为空表，返回TRUE，否则返回FALSE
-Status ListEmpty(Sqlist L)
+Status ListEmpty(SqList L)
 {
     if (L.length == 0)
         return TRUE;
@@ -64,13 +64,13 @@ Status ListEmpty(Sqlist L)
         return FALSE;
 }
 //返回表长
-int ListLength(Sqlist L)
+int ListLength(SqList L)
 {
     return L.length;
 }
 //输入：线性表L，数据坐标，用于存储返回值的变量。
 //输出：用e返回线性表L中第i个数据的值。
-Status GetElem(Sqlist L, int i, ElemType &e)
+Status GetElem(SqList L, int i, ElemType &e)
 {
     //输入数据异常
     if (i < 1 || i > L.length)
@@ -88,7 +88,7 @@ Status comp(ElemType a, ElemType b)
 //输入：非空线性表L，compare()是数据元素判定函数（满足1，否则0）
 //输出：L中第一个与e满足关系compare()的数据元素的位序
 //用到了函数指针
-int LocateElem(Sqlist L, ElemType e, Status (*compare)(ElemType, ElemType))
+int LocateElem(SqList L, ElemType e, Status (*compare)(ElemType, ElemType))
 {
     ElemType *p;
     int i = 1;
@@ -104,7 +104,7 @@ int LocateElem(Sqlist L, ElemType e, Status (*compare)(ElemType, ElemType))
 }
 //输入：一个线性表，线性表中的一个元素（不能是第一个），存储返回值的变量
 //输出：返回线性表中一个元素的前驱
-Status PriorElem(Sqlist L, ElemType cur_e, ElemType &pre_e)
+Status PriorElem(SqList L, ElemType cur_e, ElemType &pre_e)
 {
     int i = 2;
     ElemType *p = L.elem + 1;
@@ -123,7 +123,7 @@ Status PriorElem(Sqlist L, ElemType cur_e, ElemType &pre_e)
 }
 //输入：一个线性表，线性表中的一个元素（不能是最后一个），存储返回值的变量
 //输出：返回线性表中一个元素的后继
-Status NextElem(Sqlist L, ElemType cur_e, ElemType &next_e)
+Status NextElem(SqList L, ElemType cur_e, ElemType &next_e)
 {
     int i = 1;
     ElemType *p = L.elem;
@@ -141,7 +141,7 @@ Status NextElem(Sqlist L, ElemType cur_e, ElemType &next_e)
     }
 }
 //在L中第i个位置之前插入新元素e，L的长度加1
-Status ListInsert(Sqlist &L, int i, ElemType e)
+Status ListInsert(SqList &L, int i, ElemType e)
 {
     ElemType *newbase, *q, *p;
     // i值不合法
@@ -156,6 +156,7 @@ Status ListInsert(Sqlist &L, int i, ElemType e)
         if (!newbase)
             exit(OVERFLOW);
         //增加存储容量
+        L.elem=newbase;
         L.listsize += LIST_INCREMENT;
     }
     q = L.elem + i - 1; // q为插入位置
@@ -167,7 +168,7 @@ Status ListInsert(Sqlist &L, int i, ElemType e)
     return OK;
 }
 //删除L中第i个元素，用e返回该元素的值
-Status ListDelete(Sqlist L, int i, ElemType &e)
+Status ListDelete(SqList L, int i, ElemType &e)
 {
     ElemType *p, *q;
     // i值不合法
@@ -195,7 +196,7 @@ void dbl(ElemType &a)
 }
 //对L的每个元素调用vi()，一旦vi()失败，则操作失败
 // vi()形参是引用，可改变元素的值。如将表中的元素都变为2倍
-Status ListTraverse(Sqlist L, void (*vi)(ElemType &))
+Status ListTraverse(SqList L, void (*vi)(ElemType &))
 {
     ElemType *p;
     int i;
@@ -206,7 +207,7 @@ Status ListTraverse(Sqlist L, void (*vi)(ElemType &))
     return OK;
 }
 //遍历表中元素
-void seeList(Sqlist L)
+void seeList(SqList L)
 {
     int i;
     for (i = 1; i <= L.length; i++)
@@ -218,7 +219,7 @@ void seeList(Sqlist L)
 int main()
 {
     //测试线性表相关函数是否正常
-    Sqlist L;
+    SqList L;
     ElemType e, e0; //存储返回值
     Status i;
     int j, k;
